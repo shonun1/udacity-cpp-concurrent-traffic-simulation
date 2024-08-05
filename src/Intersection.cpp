@@ -52,13 +52,13 @@ void Intersection::addStreet(std::shared_ptr<Street> street) {
   _streets.push_back(street);
 }
 
-std::vector<std::shared_ptr<Street>>
-Intersection::queryStreets(std::shared_ptr<Street> incoming) {
+std::vector<std::shared_ptr<Street>> Intersection::queryStreets(
+    std::shared_ptr<Street> incoming) {
   // store all outgoing streets in a vector ...
   std::vector<std::shared_ptr<Street>> outgoings;
   for (auto it : _streets) {
     if (incoming->getID() !=
-        it->getID()) // ... except the street making the inquiry
+        it->getID())  // ... except the street making the inquiry
     {
       outgoings.push_back(it);
     }
@@ -91,10 +91,9 @@ void Intersection::addVehicleToQueue(std::shared_ptr<Vehicle> vehicle) {
   // FP.6b : use the methods TrafficLight::getCurrentPhase and
   // TrafficLight::waitForGreen to block the execution until the traffic light
   // turns green.
-
-  // To the reviewer: waitForGreen already ensures the light has turned green so
-  // getCurrentPhase won't be needed here
-  _trafficLight.waitForGreen();
+  if (_trafficLight.getCurrentPhase() != TrafficLightPhase::green) {
+    _trafficLight.waitForGreen();
+  }
 
   lck.unlock();
 }
@@ -114,7 +113,7 @@ void Intersection::setIsBlocked(bool isBlocked) {
 }
 
 // virtual function which is executed in a thread
-void Intersection::simulate() // using threads + promises/futures + exceptions
+void Intersection::simulate()  // using threads + promises/futures + exceptions
 {
   // FP.6a : In Intersection.h, add a private member _trafficLight of type
   // TrafficLight. At this position, start the simulation of _trafficLight.
@@ -152,5 +151,5 @@ bool Intersection::trafficLightIsGreen() {
   else
     return false;
 
-  return true; // makes traffic light permanently green
+  return true;  // makes traffic light permanently green
 }
